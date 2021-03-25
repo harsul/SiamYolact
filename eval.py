@@ -32,7 +32,6 @@ import cv2
 
 st = SiameseTracker()
 
-
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
         return True
