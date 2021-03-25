@@ -108,17 +108,21 @@ def parse_args(argv=None):
     parser.add_argument('--image', default = None, type = str,
                         help = 'A path to an image to use for display.')
     parser.add_argument('--images', default = None, type = str,
-                        help = 'An input folder of images and output folder to save detected images. Should be in the format input->output.')
+                        help = 'An input folder of images and output folder to save detected images. Should be in the '
+                               'format input->output.')
     parser.add_argument('--video', default = None, type = str,
                         help = 'A path to a video to evaluate on. Passing in a number will use that index webcam.')
     parser.add_argument('--video_multiframe', default = 1, type = int,
                         help = 'The number of frames to evaluate in parallel to make videos play at higher fps.')
     parser.add_argument('--score_threshold', default = 0, type = float,
-                        help = 'Detections with a score under this threshold will not be considered. This currently only works in display mode.')
+                        help = 'Detections with a score under this threshold will not be considered. This currently '
+                               'only works in display mode.')
     parser.add_argument('--dataset', default = None, type = str,
-                        help = 'If specified, override the dataset specified in the config with this one (example: coco2017_dataset).')
+                        help = 'If specified, override the dataset specified in the config with this one (example: '
+                               'coco2017_dataset).')
     parser.add_argument('--detect', default = False, dest = 'detect', action = 'store_true',
-                        help = 'Don\'t evauluate the mask branch at all and only do object detection. This only works for --display and --benchmark.')
+                        help = 'Don\'t evaluate the mask branch at all and only do object detection. This only works '
+                               'for --display and --benchmark.')
     parser.add_argument('--display_fps', default = False, dest = 'display_fps', action = 'store_true',
                         help = 'When displaying / saving video, draw the FPS on the frame')
     parser.add_argument('--emulate_playback', default = False, dest = 'emulate_playback', action = 'store_true',
@@ -275,7 +279,7 @@ def prep_display(dets_out, img, h, w, undo_transform=True, class_color=False, ma
 
             if args.display_text:
                 _class = cfg.dataset.class_names[classes[j]]
-                text_str = '%.2f' % (objectID) if args.display_scores else _class
+                text_str = '%.2f' % objectID if args.display_scores else _class
 
                 font_face = cv2.FONT_HERSHEY_DUPLEX
                 font_scale = 0.6
