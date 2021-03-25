@@ -276,7 +276,7 @@ def prep_display(dets_out, img, h, w, undo_transform=True, class_color=False, ma
 
             if args.display_text:
                 _class = cfg.dataset.class_names[classes[j]]
-                text_str = '%s: %.2f' % (_class, score) if args.display_scores else _class
+                text_str = '%.2f' % (objectID) if args.display_scores else _class
 
                 font_face = cv2.FONT_HERSHEY_DUPLEX
                 font_scale = 0.6
