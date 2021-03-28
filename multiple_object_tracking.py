@@ -25,7 +25,7 @@ from collections import defaultdict
 from pathlib import Path
 from collections import OrderedDict
 from PIL import Image
-from siamese.siamesetracker import SiameseTracker
+from tracker.siamesetracker import SiameseTracker
 
 import matplotlib.pyplot as plt
 import cv2
@@ -255,55 +255,30 @@ def prep_display(dets_out, img, h, w, undo_transform=True, class_color=False, ma
     rects = []
     images = []
 
-    # crop images from boxes
-    if args.display_text or args.display_bboxes:
-        for j in reversed(range(num_dets_to_consider)):
-            x1, y1, x2, y2 = boxes[j, :]
-            box = x1, y1, x2, y2
-            rects.append(box)
-            img = frame[y1:y1 + y2, x1:x1 + x2]
-            images.append(img)
-
-    objects = st.update_track(rects, images)
-
-    print(boxes)
-
-    # crop images from boxes
-    if args.display_text or args.display_bboxes:
-        for (objectID, box) in objects.items():
-            x1, y1, x2, y2 = box
-            color = (255, 255, 255)
-            if args.display_bboxes:
-                cv2.rectangle(img_numpy, (x1, y1), (x2, y2), color, 1)
-
-            if args.display_text:
-                _class = cfg.dataset.class_names[classes[j]]
-                text_str = '%.2f' % objectID if args.display_scores else _class
-
-                font_face = cv2.FONT_HERSHEY_DUPLEX
-                font_scale = 0.6
-                font_thickness = 1
-
-                text_w, text_h = cv2.getTextSize(text_str, font_face, font_scale, font_thickness)[0]
-
-                text_pt = (x1, y1 - 3)
-
-                cv2.rectangle(img_numpy, (x1, y1), (x1 + text_w, y1 - text_h - 4), color, -1)
-                cv2.putText(img_numpy, text_str, text_pt, font_face, font_scale, color, font_thickness,
-                            cv2.LINE_AA)
-
+    # # crop images from boxes
     # if args.display_text or args.display_bboxes:
     #     for j in reversed(range(num_dets_to_consider)):
     #         x1, y1, x2, y2 = boxes[j, :]
-    #         color = get_color(j)
-    #         score = scores[j]
+    #         box = x1, y1, x2, y2
+    #         rects.append(box)
+    #         img = frame[y1:y1 + y2, x1:x1 + x2]
+    #         images.append(img)
     #
+    # objects = st.update_track(rects, images)
+    #
+    # print(boxes)
+    #
+    # # crop images from boxes
+    # if args.display_text or args.display_bboxes:
+    #     for (objectID, box) in objects.items():
+    #         x1, y1, x2, y2 = box
+    #         color = (255, 255, 255)
     #         if args.display_bboxes:
     #             cv2.rectangle(img_numpy, (x1, y1), (x2, y2), color, 1)
     #
     #         if args.display_text:
     #             _class = cfg.dataset.class_names[classes[j]]
-    #             text_str = '%s: %.2f' % (_class, score) if args.display_scores else _class
+    #             text_str = '%.2f' % objectID if args.display_scores else _class
     #
     #             font_face = cv2.FONT_HERSHEY_DUPLEX
     #             font_scale = 0.6
@@ -312,11 +287,36 @@ def prep_display(dets_out, img, h, w, undo_transform=True, class_color=False, ma
     #             text_w, text_h = cv2.getTextSize(text_str, font_face, font_scale, font_thickness)[0]
     #
     #             text_pt = (x1, y1 - 3)
-    #             text_color = [255, 255, 255]
     #
     #             cv2.rectangle(img_numpy, (x1, y1), (x1 + text_w, y1 - text_h - 4), color, -1)
-    #             cv2.putText(img_numpy, text_str, text_pt, font_face, font_scale, text_color, font_thickness,
+    #             cv2.putText(img_numpy, text_str, text_pt, font_face, font_scale, color, font_thickness,
     #                         cv2.LINE_AA)
+
+    if args.display_text or args.display_bboxes:
+        for j in reversed(range(num_dets_to_consider)):
+            x1, y1, x2, y2 = boxes[j, :]
+            color = get_color(j)
+            score = scores[j]
+
+            if args.display_bboxes:
+                cv2.rectangle(img_numpy, (x1, y1), (x2, y2), color, 1)
+
+            if args.display_text:
+                _class = cfg.dataset.class_names[classes[j]]
+                text_str = '%s: %.2f' % (_class, score) if args.display_scores else _class
+
+                font_face = cv2.FONT_HERSHEY_DUPLEX
+                font_scale = 0.6
+                font_thickness = 1
+
+                text_w, text_h = cv2.getTextSize(text_str, font_face, font_scale, font_thickness)[0]
+
+                text_pt = (x1, y1 - 3)
+                text_color = [255, 255, 255]
+
+                cv2.rectangle(img_numpy, (x1, y1), (x1 + text_w, y1 - text_h - 4), color, -1)
+                cv2.putText(img_numpy, text_str, text_pt, font_face, font_scale, text_color, font_thickness,
+                            cv2.LINE_AA)
 
     return img_numpy
 
